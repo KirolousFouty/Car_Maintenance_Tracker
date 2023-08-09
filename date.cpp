@@ -64,3 +64,80 @@ string date::getDate()
     s = to_string(day) + "/" + to_string(month) + "/" + to_string(year);
     return s;
 }
+
+date date::operator+(double m)
+{
+    date temp = *this;
+    temp.setMonth(temp.getMonth() + m);
+
+    while (temp.getMonth() > 12)
+    {
+        temp.setYear(temp.getYear() + 1);
+        temp.setMonth((temp.getMonth() - 12));
+    }
+
+    return temp;
+}
+
+date date::operator+(date d2)
+{
+    date temp = *this;
+
+    temp.day += d2.day;
+
+    while (temp.day > 31)
+    {
+        temp.month++;
+        temp.day -= 31;
+    }
+
+    temp.month += d2.month;
+
+    while (temp.month > 12)
+    {
+        temp.year++;
+        temp.month -= 12;
+    }
+
+    temp.year += d2.year;
+
+    return temp;
+}
+
+bool date::operator<(date const &d2)
+{
+    if (this->year < d2.year)
+    {
+        return true;
+    }
+    else if (this->year > d2.year)
+    {
+        return false;
+    }
+    else // same year
+    {
+        if (this->month < d2.month)
+        {
+            return true;
+        }
+        else if (this->month > d2.month)
+        {
+            return false;
+        }
+        else // same month
+        {
+            if (this->day < d2.day)
+            {
+                return true;
+            }
+            else if (this->day > d2.day)
+            {
+                return false;
+            }
+            else // same day
+            {
+                return true;
+            }
+        }
+    }
+}

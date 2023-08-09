@@ -24,6 +24,10 @@ public:
     int getMonth();
     int getYear();
     string getDate();
+
+    date operator+(double m);
+    date operator+(date m);
+    bool operator<(date const &d2);
 };
 
 #endif

@@ -18,6 +18,9 @@ public:
 
     date getDate();
     double getRange();
+    bool operator<(dateAndRange const &d2);
+    dateAndRange operator+(dateAndRange const &d2);
+    dateAndRange operator=(dateAndRange const &d2);
 };
 
 #endif
