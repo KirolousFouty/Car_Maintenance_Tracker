@@ -2,152 +2,271 @@
     Assumptions: Every month is 31 days long
     To-Do: - File handling system to store previous dates
            - Save or discard option in file handling
-           - Fully implement item.cpp
+           - Fully implement part.cpp
            - Implement statistical functions
 */
 
 #include <iostream>
+#include <iomanip>
+#include <vector>
 
 #include "date.h"
 #include "dateAndRange.h"
-#include "motorOilAndFilter.h"
-#include "coolingFluid.h"
-#include "sparkPlug.h"
-#include "fuelFilter.h"
-#include "airFilter.h"
-#include "brakeOil.h"
-#include "gearboxOil.h"
-#include "brakePadsFront.h"
-#include "brakePadsBack.h"
-#include "battery.h"
-#include "fuelPump.h"
-#include "tyresFront.h"
-#include "tyresBack.h"
-#include "airConditionerFilter.h"
+#include "part.h"
 
 using namespace std;
 
-motorOilAndFilter p1;
-coolingFluid p2;
-sparkPlug p3;
-fuelFilter p4;
-airFilter p5;
-brakeOil p6;
-gearboxOil p7;
-brakePadsFront p8;
-brakePadsBack p9;
-battery p10;
-fuelPump p11;
-tyresFront p12;
-tyresBack p13;
-airConditionerFilter p14;
+vector<part> parts;
 
 void check(dateAndRange in);
 void checkNextKM(dateAndRange in, double KM);
+void printList();
+void printLastReplaced();
+void printUpcomingReplacement();
+
+void mainMenu();
+void checkMenu();
+void updateMenu();
+void notesMenu();
+void historyMenu();
 
 int main()
 {
-    // motorOilAndFilter p1;
-    p1.setBeforeRegularReplacement(dateAndRange(date(0, 12, 0), 10));
-    date d1(13, 6, 2023);
-    dateAndRange dr1(d1, 157180);
-    p1.setLastReplaced(dr1); // 13/6/2023 157180 KM
 
-    // coolingFluid p2;
-    p2.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 40));
-    date d2(17, 12, 2021);
-    dateAndRange dr2(d2, 127000);
-    p2.setLastReplaced(dr2); // 17/12/2021 127000 KM         //// 23/1/2023 148000 KM
+    part motorOilAndFilter;
+    part coolingFluid;
+    part sparkPlug;
+    part fuelFilter;
+    part airFilter;
+    part brakeOil;
+    part gearboxOil;
+    part brakePadsFront;
+    part brakePadsBack;
+    part battery;
+    part fuelPump;
+    part tyresFront;
+    part tyresBack;
+    part airConditionerFilter;
 
-    // sparkPlug p3;
-    p3.setBeforeRegularReplacement(dateAndRange(date(0, 0, 0), 100));
-    date d3(9, 9, 2022);
-    dateAndRange dr3(d3, 139863);
-    p3.setLastReplaced(dr3); // 9/9/2022 139863 KM
-
-    // fuelFilter p4;
-    p4.setBeforeRegularReplacement(dateAndRange(date(0, 96, 0), 80));
-    date d4(28, 11, 2021);
-    dateAndRange dr4(d4, 125552);
-    p4.setLastReplaced(dr4); // 28/11/2021 125552 KM
-
-    // airFilter p5;
-    p5.setBeforeRegularReplacement(dateAndRange(date(0, 48, 0), 40));
-    p5.setBeforeRegularCheck(dateAndRange(date(0, 24, 0), 20));
-    date d5(13, 6, 2023);
-    dateAndRange dr5(d5, 157180);
-    p5.setLastReplaced(dr5); // 13/6/2023 157180 KM
-
-    // brakeOil p6;
-    p6.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 40));
-    p6.setBeforeRegularCheck(dateAndRange(date(0, 6, 0), 10));
-    date d6(17, 12, 2021);
-    dateAndRange dr6(d6, 127000);
-    p6.setLastReplaced(dr6); // 17/12/2021 127000 KM
-
-    // gearboxOil p7;
-    p7.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p7.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d7(30, 11, 2019);
-    dateAndRange dr7(d7, 101077);
-    p7.setLastReplaced(dr7); // 30/11/2019 101077 KM
-
-    // brakePadsFront p8;
-    p8.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p8.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d8(3, 12, 2021);
-    dateAndRange dr8(d8, 125800);
-    p8.setLastReplaced(dr8);
-    // brake pads front 3/12/2021 125800 KM
-
-    // brakePadsBack p9;
-    p9.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p9.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d9(10, 1, 2020);
-    dateAndRange dr9(d9, 102472);
-    p9.setLastReplaced(dr9);
-    // brake pads back 10/1/2020 102472 KM
-
-    // battery p10;
-    p10.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p10.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d10(9, 5, 2022);
-    dateAndRange dr10(d10, 133505);
-    p10.setLastReplaced(dr10);
-    // battery 9/5/2022 133505 KM
-
-    // fuelPump p11;
-    p11.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p11.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d11(30, 11, 2019);
-    dateAndRange dr11(d11, 124565);
-    p11.setLastReplaced(dr11);
-    // fuel pump 4/11/2021 124565 KM
-
-    // tyresFront p12;
-    p12.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p12.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d12(30, 11, 2019);
-    dateAndRange dr12(d12, 150489);
-    p12.setLastReplaced(dr12);
-    // tyres front 16/3/2023 150489 KM
-
-    // tyresBack p13;
-    p13.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p13.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d13(30, 11, 2019);
-    dateAndRange dr13(d13, 85179);
-    p13.setLastReplaced(dr13);
-    // tyres back 7/11/2018 85179 KM
-
-    // airConditionerFilter p14;
-    p14.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
-    p14.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
-    date d14(30, 11, 2019);
-    dateAndRange dr14(d14, 157180);
-    p14.setLastReplaced(dr14);
+    airConditionerFilter.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    airConditionerFilter.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    airConditionerFilter.setName("Air conditioner filter");
+    airConditionerFilter.setLastReplaced(dateAndRange(date(30, 11, 2019), 157180));
     // ACfilter 13/6/2023 157180 KM
 
+    airFilter.setBeforeRegularReplacement(dateAndRange(date(0, 48, 0), 40));
+    airFilter.setBeforeRegularCheck(dateAndRange(date(0, 24, 0), 20));
+    airFilter.setName("Air filter");
+    airFilter.setLastReplaced(dateAndRange(date(13, 6, 2023), 157180));
+    // 13/6/2023 157180 KM
+
+    battery.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    battery.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    battery.setName("Battery");
+    battery.setLastReplaced(dateAndRange(date(9, 5, 2022), 133505));
+    // battery 9/5/2022 133505 KM
+
+    brakeOil.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 40));
+    brakeOil.setBeforeRegularCheck(dateAndRange(date(0, 6, 0), 10));
+    brakeOil.setName("Brake oil");
+    brakeOil.setLastReplaced(dateAndRange(date(17, 12, 2021), 127000)); // 17/12/2021 127000 KM
+
+    brakePadsBack.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    brakePadsBack.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    brakePadsBack.setName("Brake pads - back");
+    brakePadsBack.setLastReplaced(dateAndRange(date(10, 1, 2020), 102472));
+    // brake pads back 10/1/2020 102472 KM
+
+    brakePadsFront.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    brakePadsFront.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    brakePadsFront.setName("Brake pads - front");
+    brakePadsFront.setLastReplaced(dateAndRange(date(3, 12, 2021), 125800));
+    // brake pads front 3/12/2021 125800 KM
+
+    coolingFluid.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 40));
+    coolingFluid.setName("Cooling fluid");
+    coolingFluid.setLastReplaced(dateAndRange(date(17, 12, 2021), 127000)); // 17/12/2021 127000 KM         //// 23/1/2023 148000 KM
+
+    fuelFilter.setBeforeRegularReplacement(dateAndRange(date(0, 96, 0), 80));
+    fuelFilter.setName("Fuel filter");
+    fuelFilter.setLastReplaced(dateAndRange(date(28, 11, 2021), 125552)); // 28/11/2021 125552 KM
+
+    fuelPump.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    fuelPump.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    fuelPump.setName("Fuel pump");
+    fuelPump.setLastReplaced(dateAndRange(date(30, 11, 2019), 124565));
+    // fuel pump 4/11/2021 124565 KM
+
+    gearboxOil.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    gearboxOil.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    gearboxOil.setName("Gearbox oil");
+    gearboxOil.setLastReplaced(dateAndRange(date(30, 11, 2019), 101077)); // 30/11/2019 101077 KM
+
+    motorOilAndFilter.setBeforeRegularReplacement(dateAndRange(date(0, 12, 0), 10));
+    motorOilAndFilter.setName("Motor oil and filter");
+    motorOilAndFilter.setLastReplaced(dateAndRange(date(13, 6, 2023), 157180)); // 13/6/2023 157180 KM
+
+    sparkPlug.setBeforeRegularReplacement(dateAndRange(date(0, 0, 0), 100));
+    sparkPlug.setName("Spark plugs");
+    sparkPlug.setLastReplaced(dateAndRange(date(9, 9, 2022), 139863)); // 9/9/2022 139863 KM
+
+    tyresBack.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    tyresBack.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    tyresBack.setName("Tyres - back");
+    tyresBack.setLastReplaced(dateAndRange(date(30, 11, 2019), 85179));
+    // tyres back 7/11/2018 85179 KM
+
+    tyresFront.setBeforeRegularReplacement(dateAndRange(date(0, 24, 0), 80)); // 24 or 48?
+    tyresFront.setBeforeRegularCheck(dateAndRange(date(0, 24, 2), 40));
+    tyresFront.setName("Tyres - front");
+    tyresFront.setLastReplaced(dateAndRange(date(30, 11, 2019), 150489));
+    // tyres front 16/3/2023 150489 KM
+
+    parts.push_back(airConditionerFilter);
+    parts.push_back(airFilter);
+    parts.push_back(battery);
+    parts.push_back(brakeOil);
+    parts.push_back(brakePadsBack);
+    parts.push_back(brakePadsFront);
+    parts.push_back(coolingFluid);
+    parts.push_back(fuelFilter);
+    parts.push_back(fuelPump);
+    parts.push_back(gearboxOil);
+    parts.push_back(motorOilAndFilter);
+    parts.push_back(sparkPlug);
+    parts.push_back(tyresBack);
+    parts.push_back(tyresFront);
+
+    cout << "\nWelcome!";
+
+    mainMenu();
+
+    return 0;
+}
+
+void check(dateAndRange in)
+{
+    cout << "\n\nNeeds to be replaced:";
+    string s = " None";
+
+    for (int i = 0; i < parts.size(); i++)
+    {
+        if (parts[i].getUpcomingReplacement().getRange() < in.getRange())
+        {
+            cout << "\n"
+                 << parts[i].getName();
+            s = "";
+        }
+    }
+    cout << s;
+    s = " None";
+
+    cout << "\n\nNeeds to be replaced in the next 500 KMs:";
+    for (int i = 0; i < parts.size(); i++)
+    {
+        if (parts[i].getUpcomingReplacement().getRange() + 500 < in.getRange())
+        {
+            cout << "\n"
+                 << parts[i].getName();
+            s = "";
+        }
+    }
+    cout << s;
+}
+
+void printList()
+{
+    cout << "\n1) Air conditioner filter";
+    cout << "\n2) Air filter";
+    cout << "\n3) Battery";
+    cout << "\n4) Brake oil";
+    cout << "\n5) Brake pads - back";
+    cout << "\n6) Brake pads - front";
+    cout << "\n7) Cooling fluid";
+    cout << "\n8) Fuel filter";
+    cout << "\n9) Fuel pump";
+    cout << "\n10) Gearbox oil";
+    cout << "\n11) Motor oil and filter";
+    cout << "\n12) Spark plugs";
+    cout << "\n13) Tyres - back";
+    cout << "\n14) Tyres - front";
+}
+
+void printLastReplaced()
+{
+    cout << "\n\n\nHere is a list of the last replacement of every part:\n";
+    for (int i = 0; i < parts.size(); i++)
+    {
+        cout << "\n"
+             << left << setw(26) << parts[i].getName();
+        parts[i].getLastReplaced().getDate().printDate();
+        cout << " at " << parts[i].getLastReplaced().getRange();
+        cout << " Kms";
+    }
+}
+
+void printUpcomingReplacement()
+{
+    cout << "\n\n\nHere is a list of the upcoming replacement of every part:\n";
+    for (int i = 0; i < parts.size(); i++)
+    {
+        cout << "\n"
+             << left << setw(26) << parts[i].getName();
+        cout << parts[i].getUpcomingReplacement().getRange();
+        cout << " Kms";
+    }
+}
+
+void mainMenu()
+{
+    int choice = 0;
+    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5)
+    {
+        cout << "\n\n\nPlease choose what you wish to do:";
+        cout << "\n1) Check";
+        cout << "\n2) Update record";
+        cout << "\n3) Show notes";
+        cout << "\n4) Show part history";
+        cout << "\n5) Show last replacement of every part";
+        cout << "\n6) Show upcoming replacements of every part";
+        cout << "\n7) Exit";
+        cout << "\n\nAnswer: ";
+        cin >> choice;
+    }
+
+    switch (choice)
+    {
+    case 1:
+        checkMenu();
+        break;
+    case 2:
+        updateMenu();
+        break;
+    case 3:
+        notesMenu();
+        break;
+    case 4:
+        historyMenu();
+        break;
+    case 5:
+        printLastReplaced();
+        break;
+    case 6:
+        printUpcomingReplacement();
+        break;
+    case 7:
+        cout << "\n\nThank you for using our application!\n\n";
+        exit(0);
+        break;
+
+    default:
+        cout << "\n\nERROR\n\n";
+        break;
+    }
+}
+
+void checkMenu()
+{
     double carRange;
     cout << "Please enter car range: ";
     cin >> carRange;
@@ -157,86 +276,88 @@ int main()
     cin >> day >> month >> year;
 
     check(dateAndRange(date(day, month, year), carRange));
-
-    return 0;
+    mainMenu();
 }
 
-void check(dateAndRange in)
+void updateMenu()
 {
-    if (p1.getUpcomingReplacement().getRange() < in.getRange())
+
+    int choice = 0;
+
+    while (choice != 1 && choice != 2)
     {
-        cout
-            << "\nMotor oil and filter need to be replaced.";
+        cout << "\n\nWhat do you want to update?";
+        cout << "\n 1) Replacement";
+        cout << "\n 2) Notes";
+        cout << "\n\nAnswer: ";
+        cin >> choice;
     }
 
-    if (p2.getUpcomingReplacement().getRange() < in.getRange())
+    if (choice == 1)
     {
-        cout << "\nCooling fluid needs to be replaced.";
+        double inRange;
+        int inDay;
+        int inMonth;
+        int inYear;
+
+        choice = 0;
+        cout << "\n\nWhat part did you replace?";
+        printList();
+        cout << "\n\nAnswer: ";
+        cin >> choice;
+        cout << "\nEnter range at replacement: ";
+        cin >> inRange;
+        cout << "\nEnter day of date at replacement: ";
+        cin >> inDay;
+        cout << "\nEnter month of date at replacement: ";
+        cin >> inMonth;
+        cout << "\nEnter year of date at replacement: ";
+        cin >> inYear;
+        parts[choice].setLastReplaced(dateAndRange(date(inDay, inMonth, inYear), inRange));
+        cout << "\n\nRecord updated!";
+    }
+    else if (choice == 2)
+    {
+        string note;
+
+        choice = 0;
+        cout << "\n\nWhat part do you want to add note to?";
+        printList();
+        cout << "\n\nAnswer: ";
+        cin >> choice;
+        cout << "\nEnter your note: ";
+        cin >> note;
+        parts[choice].setNotes(note);
+        cout << "\n\nNotes updated!";
     }
 
-    if (p3.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nSpark plugs need to be replaced.";
-    }
+    mainMenu();
+}
 
-    if (p4.getUpcomingReplacement().getRange() < in.getRange())
+void historyMenu()
+{
+    int choice = 0;
+    cout << "\n\nWhich part do you want to show history?";
+    printList();
+    cout << "\n\nAnswer: ";
+    cin >> choice;
+    cout << "\n\nReplacements were as follows:";
+    for (int i = 0; i < parts[choice].replacementDates.size(); i++)
     {
-        cout << "\nFuel filter needs to be replaced.";
-    }
-
-    if (p5.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nAir filter needs to be replaced.";
-    }
-
-    if (p6.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nBrake oil needs to be replaced.";
-    }
-
-    if (p7.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nGearbox oil needs to be replaced.";
-    }
-
-    if (p8.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nFront brake pads need to be replaced.";
-    }
-
-    if (p9.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nBack brake pads need to be replaced.";
-    }
-
-    if (p10.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nBattery needs to be replaced.";
-    }
-
-    if (p11.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nFuel pump needs to be replaced.";
-    }
-
-    if (p12.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nFront tyres need to be replaced.";
-    }
-
-    if (p13.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nBack tyres need to be replaced.";
-    }
-
-    if (p14.getUpcomingReplacement().getRange() < in.getRange())
-    {
-        cout << "\nAir conditioner filter needs to be replaced.";
+        cout << "\n";
+        parts[choice].replacementDates[i].getDate().printDate();
+        cout << " at " << parts[choice].replacementDates[i].getRange() << " KMs";
     }
 }
 
-void checkNextKM(dateAndRange in, double KM)
+void notesMenu()
 {
-    in.setRange(in.getRange() + KM);
-    check(in);
+    int choice = 0;
+    cout << "\n\nWhich part do you want to show notes?";
+    printList();
+    cout << "\n\nAnswer: ";
+    cin >> choice;
+    cout << "\n\nNotes:\n"
+         << parts[choice].getNotes();
+    mainMenu();
 }

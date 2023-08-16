@@ -2,6 +2,7 @@
 #define DATE_H
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 using namespace std;
 
@@ -24,10 +25,13 @@ public:
     int getMonth();
     int getYear();
     string getDate();
+    void printDate();
 
     date operator+(double m);
     date operator+(date m);
+    date operator/(int n);
     bool operator<(date const &d2);
+    void operator=(date const &d2);
 };
 
 #endif

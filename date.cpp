@@ -65,6 +65,11 @@ string date::getDate()
     return s;
 }
 
+void date::printDate()
+{
+    cout << day << "/" << month << "/" << year;
+}
+
 date date::operator+(double m)
 {
     date temp = *this;
@@ -104,6 +109,28 @@ date date::operator+(date d2)
     return temp;
 }
 
+date date::operator/(int n)
+{
+    double d1 = this->day + this->month * 31 + this->year * 12 * 31;
+
+    int days = 0, months = 0, years = 0;
+    days = d1 / n;
+
+    while (days > 31)
+    {
+        months++;
+        days -= 31;
+    }
+
+    while (months > 12)
+    {
+        years++;
+        months -= 12;
+    }
+
+    return date(days, months, years);
+}
+
 bool date::operator<(date const &d2)
 {
     if (this->year < d2.year)
@@ -140,4 +167,11 @@ bool date::operator<(date const &d2)
             }
         }
     }
+}
+
+void date::operator=(date const &d2)
+{
+    this->day = d2.day;
+    this->month = d2.month;
+    this->year = d2.year;
 }
